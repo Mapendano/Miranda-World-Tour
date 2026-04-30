@@ -387,41 +387,6 @@
   }
 
   // Display the initial scene.
-  var firstSceneInitialized = false;
-  function initFirstScene() {
-    if (firstSceneInitialized) return;
-    
-    if (panoElement.clientWidth === 0 || panoElement.clientHeight === 0) {
-      setTimeout(initFirstScene, 100);
-      return;
-    }
-    
-    firstSceneInitialized = true;
-    switchScene(scenes[0]);
-    if (viewer && viewer.updateSize) {
-      viewer.updateSize();
-    }
-    
-    // Give Marzipano a tiny kick to trigger rendering
-    var interval = setInterval(function() {
-      if (viewer && viewer.updateSize) {
-        viewer.updateSize();
-      }
-      var view = viewer.view();
-      if (view) {
-        view.setPitch(view.pitch() + 0.0001);
-        view.setPitch(view.pitch() - 0.0001);
-      }
-      window.dispatchEvent(new Event('resize'));
-    }, 200);
-    setTimeout(function() {
-      clearInterval(interval);
-    }, 1500);
-  }
-
-  // Ensure initFirstScene is called reliably
-  initFirstScene();
-  window.addEventListener('load', initFirstScene);
-  document.addEventListener('DOMContentLoaded', initFirstScene);
+  switchScene(scenes[0]);
 
 })();
