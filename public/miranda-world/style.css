@@ -828,3 +828,97 @@ body.view-control-buttons .viewControlButton {
 .viewControlButton-6 {
   margin-left: 105px;
 }
+
+
+#deviceOrientationToggle {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8);
+}
+
+.mobile #deviceOrientationToggle {
+  width: 50px;
+  height: 50px;
+}
+
+/* Position adjustments */
+body.fullscreen-enabled #deviceOrientationToggle {
+  right: 40px;
+}
+body.fullscreen-enabled.mobile #deviceOrientationToggle {
+  right: 50px;
+}
+
+/* Move autorotate further left when both are present */
+#autorotateToggle {
+  right: 40px;
+}
+.mobile #autorotateToggle {
+  right: 50px;
+}
+body.fullscreen-enabled #autorotateToggle {
+  right: 80px;
+}
+body.fullscreen-enabled.mobile #autorotateToggle {
+  right: 100px;
+}
+
+#deviceOrientationToggle .icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+}
+.mobile #deviceOrientationToggle .icon {
+  top: 10px;
+  right: 10px;
+}
+#deviceOrientationToggle .icon.on { display: none; }
+#deviceOrientationToggle .icon.off { display: block; }
+#deviceOrientationToggle.enabled .icon.on { display: block; fill: #4ade80; stroke: #4ade80;}
+#deviceOrientationToggle.enabled .icon.off { display: none; }
+
+#musicToggle {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 80px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  background-color: rgb(103,115,131);
+  background-color: rgba(103,115,131,0.8);
+}
+.mobile #musicToggle {
+  width: 50px;
+  height: 50px;
+  right: 100px;
+}
+body.fullscreen-enabled #musicToggle {
+  right: 120px;
+}
+body.fullscreen-enabled.mobile #musicToggle {
+  right: 150px;
+}
+#musicToggle .icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+}
+.mobile #musicToggle .icon {
+  top: 10px;
+  right: 10px;
+}
+#musicToggle .icon.on { display: none; }
+#musicToggle .icon.off { display: block; }
+#musicToggle.enabled .icon.on { display: block; }
+#musicToggle.enabled .icon.off { display: none; }

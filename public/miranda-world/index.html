@@ -46,9 +46,19 @@
   <h1 class="sceneName"></h1>
 </div>
 
+<a href="javascript:void(0)" id="musicToggle" class="enabled">
+  <svg class="icon off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="1" x2="1" y2="23"/></svg>
+  <svg class="icon on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+</a>
+
 <a href="javascript:void(0)" id="autorotateToggle">
   <img class="icon off" src="img/play.png">
   <img class="icon on" src="img/pause.png">
+</a>
+
+<a href="javascript:void(0)" id="deviceOrientationToggle">
+  <svg class="icon off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+  <svg class="icon on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
 </a>
 
 <a href="javascript:void(0)" id="fullscreenToggle">
@@ -80,9 +90,11 @@
   <img class="icon" src="img/minus.png">
 </a>
 
+<audio id="bgMusic" src="https://cdn.freesound.org/previews/516/516942_11303862-lq.mp3" loop preload="auto"></audio>
+
 <script src="vendor/screenfull.min.js" ></script>
 <script src="vendor/bowser.min.js" ></script>
-<script src="vendor/marzipano.js" ></script>
+<script src="vendor/marzipano.js" ></script>\n<script src="vendor/DeviceOrientationControlMethod.js" ></script>
 
 <script src="data.js"></script>
 <script src="index.js"></script>

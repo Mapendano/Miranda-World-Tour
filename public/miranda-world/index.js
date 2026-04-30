@@ -70,6 +70,53 @@
   // Initialize viewer.
   var viewer = new Marzipano.Viewer(panoElement, viewerOpts);
 
+  // Device Orientation Setup
+  var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle');
+  var deviceOrientationControlMethod = new DeviceOrientationControlMethod();
+  var controls = viewer.controls();
+  controls.registerMethod('deviceOrientation', deviceOrientationControlMethod);
+  
+  function enableDeviceOrientation() {
+    deviceOrientationControlMethod.getPitch(function(err, pitch) {
+      if (!err) {
+        viewer.view().setPitch(pitch);
+      }
+    });
+    controls.enableMethod('deviceOrientation');
+    deviceOrientationToggleElement.classList.add('enabled');
+
+    if (autorotateToggleElement && autorotateToggleElement.classList.contains('enabled')) {
+      autorotateToggleElement.classList.remove('enabled');
+      stopAutorotate();
+    }
+  }
+
+  function disableDeviceOrientation() {
+    controls.disableMethod('deviceOrientation');
+    deviceOrientationToggleElement.classList.remove('enabled');
+  }
+
+  function toggleDeviceOrientation() {
+    if (deviceOrientationToggleElement.classList.contains('enabled')) {
+      disableDeviceOrientation();
+    } else {
+      if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(function(permissionState) {
+          if (permissionState === 'granted') {
+            enableDeviceOrientation();
+          }
+        }).catch(console.error);
+      } else {
+        enableDeviceOrientation();
+      }
+    }
+  }
+
+  if (deviceOrientationToggleElement) {
+    deviceOrientationToggleElement.addEventListener('click', toggleDeviceOrientation);
+  }
+
+
   // Create scenes.
   var scenes = data.scenes.map(function(data) {
     var urlPrefix = "tiles";
@@ -119,6 +166,44 @@
 
   // Set handler for autorotate toggle.
   autorotateToggleElement.addEventListener('click', toggleAutorotate);
+
+  var musicToggleElement = document.querySelector('#musicToggle');
+  var bgMusic = document.querySelector('#bgMusic');
+
+  if (bgMusic) {
+    bgMusic.volume = 0.5;
+    var playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(error) {
+        // Auto-play was prevented by browser, wait for first click
+        if (musicToggleElement && musicToggleElement.classList.contains('enabled')) {
+            musicToggleElement.classList.remove('enabled');
+        }
+        var startAudio = function() {
+          if (!musicToggleElement || musicToggleElement.classList.contains('enabled')) {
+             bgMusic.play();
+          }
+          document.removeEventListener('click', startAudio);
+        };
+        document.addEventListener('click', startAudio);
+      });
+    }
+  }
+
+  function toggleMusic() {
+    if (musicToggleElement.classList.contains('enabled')) {
+      musicToggleElement.classList.remove('enabled');
+      bgMusic.pause();
+    } else {
+      musicToggleElement.classList.add('enabled');
+      bgMusic.play().catch(function(){}); // Catch autoplay policies
+    }
+  }
+  
+  if (musicToggleElement) {
+    musicToggleElement.addEventListener('click', toggleMusic);
+  }
+
 
   // Set up fullscreen mode, if supported.
   if (screenfull.enabled && data.settings.fullscreenButton) {
@@ -387,41 +472,28 @@
   }
 
   // Display the initial scene.
-  var firstSceneInitialized = false;
-  function initFirstScene() {
-    if (firstSceneInitialized) return;
-    
-    if (panoElement.clientWidth === 0 || panoElement.clientHeight === 0) {
-      setTimeout(initFirstScene, 100);
-      return;
-    }
-    
-    firstSceneInitialized = true;
-    switchScene(scenes[0]);
-    if (viewer && viewer.updateSize) {
-      viewer.updateSize();
-    }
-    
-    // Give Marzipano a tiny kick to trigger rendering
-    var interval = setInterval(function() {
-      if (viewer && viewer.updateSize) {
-        viewer.updateSize();
+  
+      var firstSceneInitialized = false;
+      function initFirstScene() {
+        if (firstSceneInitialized) return;
+        if (panoElement.clientWidth === 0 || panoElement.clientHeight === 0) {
+          setTimeout(initFirstScene, 100);
+          return;
+        }
+        firstSceneInitialized = true;
+        switchScene(scenes[0]);
+        if (viewer && viewer.updateSize) viewer.updateSize();
+        
+        var interval = setInterval(function() {
+          if (viewer && viewer.updateSize) viewer.updateSize();
+          var view = viewer.view();
+          if (view) { view.setPitch(view.pitch() + 0.0001); view.setPitch(view.pitch() - 0.0001); }
+          window.dispatchEvent(new Event('resize'));
+        }, 200);
+        setTimeout(function() { clearInterval(interval); }, 1500);
       }
-      var view = viewer.view();
-      if (view) {
-        view.setPitch(view.pitch() + 0.0001);
-        view.setPitch(view.pitch() - 0.0001);
-      }
-      window.dispatchEvent(new Event('resize'));
-    }, 200);
-    setTimeout(function() {
-      clearInterval(interval);
-    }, 1500);
-  }
-
-  // Ensure initFirstScene is called reliably
-  initFirstScene();
-  window.addEventListener('load', initFirstScene);
-  document.addEventListener('DOMContentLoaded', initFirstScene);
+      initFirstScene();
+      window.addEventListener('load', initFirstScene);
+      
 
 })();
