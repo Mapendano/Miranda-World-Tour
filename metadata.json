@@ -1,0 +1,10 @@
+{
+  "name": "Marzipano 360 Viewer",
+  "description": "Application web pour visualiser des panoramas 360° interactifs avec Marzipano.",
+  "requestFramePermissions": [
+    "accelerometer",
+    "gyroscope",
+    "magnetometer"
+  ],
+  "majorCapabilities": []
+}
