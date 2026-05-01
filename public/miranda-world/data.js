@@ -2,7 +2,7 @@ var APP_DATA = {
   "scenes": [
     {
       "id": "0-beache-",
-      "name": "Beache ⛱️",
+      "name": "Beach ⛱️",
       "levels": [
         {
           "tileSize": 256,

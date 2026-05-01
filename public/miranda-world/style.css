@@ -46,23 +46,23 @@ a, a:hover, a:active, a:visited {
   position: absolute;
   top: 0;
   left: 0;
-  right: 40px;
+  right: 120px;
   height: 40px;
   text-align: center;
 }
 
 .mobile #titleBar {
   height: 50px;
-  right: 50px;
+  right: 150px;
 }
 
 /* If there is a fullscreen button the title bar must make space for it */
 body.fullscreen-enabled #titleBar {
-  right: 80px;
+  right: 160px;
 }
 
 body.fullscreen-enabled.mobile #titleBar {
-  right: 100px;
+  right: 200px;
 }
 
 /* If there are multiple scenes the title bar must make space for the scene list toggle */
@@ -882,7 +882,7 @@ body.fullscreen-enabled.mobile #autorotateToggle {
 }
 #deviceOrientationToggle .icon.on { display: none; }
 #deviceOrientationToggle .icon.off { display: block; }
-#deviceOrientationToggle.enabled .icon.on { display: block; fill: #4ade80; stroke: #4ade80;}
+#deviceOrientationToggle.enabled .icon.on { display: block; stroke: #4ade80;}
 #deviceOrientationToggle.enabled .icon.off { display: none; }
 
 #musicToggle {
