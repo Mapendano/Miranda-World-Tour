@@ -70,56 +70,9 @@
   // Initialize viewer.
   var viewer = new Marzipano.Viewer(panoElement, viewerOpts);
 
-  // Device Orientation Setup
-  var deviceOrientationToggleElement = document.querySelector('#deviceOrientationToggle');
-  var deviceOrientationControlMethod = new DeviceOrientationControlMethod();
-  var controls = viewer.controls();
-  controls.registerMethod('deviceOrientation', deviceOrientationControlMethod);
-  
-  function enableDeviceOrientation() {
-    deviceOrientationControlMethod.getPitch(function(err, pitch) {
-      if (!err) {
-        viewer.view().setPitch(pitch);
-      }
-    });
-    controls.enableMethod('deviceOrientation');
-    deviceOrientationToggleElement.classList.add('enabled');
-
-    if (autorotateToggleElement && autorotateToggleElement.classList.contains('enabled')) {
-      autorotateToggleElement.classList.remove('enabled');
-      stopAutorotate();
-    }
-  }
-
-  function disableDeviceOrientation() {
-    controls.disableMethod('deviceOrientation');
-    deviceOrientationToggleElement.classList.remove('enabled');
-  }
-
-  function toggleDeviceOrientation() {
-    if (deviceOrientationToggleElement.classList.contains('enabled')) {
-      disableDeviceOrientation();
-    } else {
-      if (DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission().then(function(permissionState) {
-          if (permissionState === 'granted') {
-            enableDeviceOrientation();
-          }
-        }).catch(console.error);
-      } else {
-        enableDeviceOrientation();
-      }
-    }
-  }
-
-  if (deviceOrientationToggleElement) {
-    deviceOrientationToggleElement.addEventListener('click', toggleDeviceOrientation);
-  }
-
-
   // Create scenes.
   var scenes = data.scenes.map(function(data) {
-    var urlPrefix = "https://mapendano.github.io/Miranda-World-/tiles";
+    var urlPrefix = "tiles";
     var source = Marzipano.ImageUrlSource.fromString(
       urlPrefix + "/" + data.id + "/{z}/{f}/{y}/{x}.jpg",
       { cubeMapPreviewUrl: urlPrefix + "/" + data.id + "/preview.jpg" });
@@ -166,44 +119,6 @@
 
   // Set handler for autorotate toggle.
   autorotateToggleElement.addEventListener('click', toggleAutorotate);
-
-  var musicToggleElement = document.querySelector('#musicToggle');
-  var bgMusic = document.querySelector('#bgMusic');
-
-  if (bgMusic) {
-    bgMusic.volume = 0.5;
-    var playPromise = bgMusic.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(function(error) {
-        // Auto-play was prevented by browser, wait for first click
-        if (musicToggleElement && musicToggleElement.classList.contains('enabled')) {
-            musicToggleElement.classList.remove('enabled');
-        }
-        var startAudio = function() {
-          if (!musicToggleElement || musicToggleElement.classList.contains('enabled')) {
-             bgMusic.play();
-          }
-          document.removeEventListener('click', startAudio);
-        };
-        document.addEventListener('click', startAudio);
-      });
-    }
-  }
-
-  function toggleMusic() {
-    if (musicToggleElement.classList.contains('enabled')) {
-      musicToggleElement.classList.remove('enabled');
-      bgMusic.pause();
-    } else {
-      musicToggleElement.classList.add('enabled');
-      bgMusic.play().catch(function(){}); // Catch autoplay policies
-    }
-  }
-  
-  if (musicToggleElement) {
-    musicToggleElement.addEventListener('click', toggleMusic);
-  }
-
 
   // Set up fullscreen mode, if supported.
   if (screenfull.enabled && data.settings.fullscreenButton) {
@@ -338,7 +253,7 @@
 
     // Create image element.
     var icon = document.createElement('img');
-    icon.src = 'https://mapendano.github.io/Miranda-World-/img/link.png';
+    icon.src = 'img/link.png';
     icon.classList.add('link-hotspot-icon');
 
     // Set rotation transform.
@@ -384,7 +299,7 @@
     var iconWrapper = document.createElement('div');
     iconWrapper.classList.add('info-hotspot-icon-wrapper');
     var icon = document.createElement('img');
-    icon.src = 'https://mapendano.github.io/Miranda-World-/img/info.png';
+    icon.src = 'img/info.png';
     icon.classList.add('info-hotspot-icon');
     iconWrapper.appendChild(icon);
 
@@ -400,7 +315,7 @@
     var closeWrapper = document.createElement('div');
     closeWrapper.classList.add('info-hotspot-close-wrapper');
     var closeIcon = document.createElement('img');
-    closeIcon.src = 'https://mapendano.github.io/Miranda-World-/img/close.png';
+    closeIcon.src = 'img/close.png';
     closeIcon.classList.add('info-hotspot-close-icon');
     closeWrapper.appendChild(closeIcon);
 
@@ -472,28 +387,6 @@
   }
 
   // Display the initial scene.
-  
-      var firstSceneInitialized = false;
-      function initFirstScene() {
-        if (firstSceneInitialized) return;
-        if (panoElement.clientWidth === 0 || panoElement.clientHeight === 0) {
-          setTimeout(initFirstScene, 100);
-          return;
-        }
-        firstSceneInitialized = true;
-        switchScene(scenes[0]);
-        if (viewer && viewer.updateSize) viewer.updateSize();
-        
-        var interval = setInterval(function() {
-          if (viewer && viewer.updateSize) viewer.updateSize();
-          var view = viewer.view();
-          if (view) { view.setPitch(view.pitch() + 0.0001); view.setPitch(view.pitch() - 0.0001); }
-          window.dispatchEvent(new Event('resize'));
-        }, 200);
-        setTimeout(function() { clearInterval(interval); }, 1500);
-      }
-      initFirstScene();
-      window.addEventListener('load', initFirstScene);
-      
+  switchScene(scenes[0]);
 
 })();
